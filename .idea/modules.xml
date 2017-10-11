@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Java_Relative.iml" filepath="$PROJECT_DIR$/Java_Relative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data_structures_and_algorithm_analysis_in_java/data_structures_and_algorithm_analysis_in_java.iml" filepath="$PROJECT_DIR$/data_structures_and_algorithm_analysis_in_java/data_structures_and_algorithm_analysis_in_java.iml" />
+    </modules>
+  </component>
+</project>
