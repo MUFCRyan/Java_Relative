@@ -33,6 +33,7 @@ public class Charades {
         int columnStart;
         int columnEnd;
         int length = content.length();
+        int listLength;
     }
 
     List<Word> longWordList = new ArrayList<>();
@@ -123,23 +124,127 @@ public class Charades {
         tempWordList.clear();
 
         // 确定最短单词的字符数
-        int wordLength = words[0].length();
+        int minWordLength = words[0].length();
         for (String word : words) {
-            if (word.length() < wordLength)
-                wordLength = word.length();
+            if (word.length() < minWordLength)
+                minWordLength = word.length();
         }
 
         // 3. 左上<-->右下方向
             // 3.1 左上 --> 右下
-            for (int row = 0; row < puzzle.length; row++) {
-                for (int column = 0; column < puzzle[row].length; column++) {
-                    // 3.1.1 对角线，控制条件：row = column
-                    // 3.1.2 对角线下方，控制条件 row' = row + y, column' = column，y = length - row
-                    // 3.1.1 对角线上方，控制条件 row' = row, column' = column + x，x = length - column
+                // 3.1.1 对角线，控制条件：row = column
+                for (int row = 0; row < puzzle.length; row++) {
+                    for (int column = 0; column < puzzle[row].length; column++) {
+                        if (row == column){
+                            if (tempWordList.size() == 0){
+                                Word word = new Word();
+                                word.rowStart = 0;
+                                word.rowEnd = row;
+                                word.columnStart = 0;
+                                word.columnEnd = column;
+                                word.content += puzzle[row][column];
+                                tempWordList.add(word);
+                            } else {
+                                Word word = tempWordList.get(0);
+                                word.rowEnd = row;
+                                word.columnEnd = column;
+                                word.content += puzzle[row][column];
+                            }
+                        }
+                    }
                 }
-            }
-            longWordList.addAll(tempWordList);
-            tempWordList.clear();
+                longWordList.addAll(tempWordList);
+                tempWordList.clear();
+
+                // 3.1.1 对角线上方，控制条件 column' = row + length - subListLength
+                for (int row = 0; row < puzzle.length; row++) {
+                    for (int column = 0; column < puzzle[row].length; column++) {
+                        if (column > 0){ // 从对角线上方的元素数组中选取
+                            // 确定当前循环组成的字符串长度不小于最短单词的长度
+                            int subListLength = puzzle[row].length - column;
+                            if (subListLength >= minWordLength){
+                                // 确定当前循环的元素在目标序列中
+                                if (column == row + puzzle[row].length -  subListLength){
+                                    boolean hasSubWord = false;
+                                    if (tempWordList.size() == 0)
+                                        hasSubWord = false;
+                                    else {
+                                        for (Word word : tempWordList) {
+                                            if (word.listLength == subListLength){
+                                                hasSubWord = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (!hasSubWord){
+                                        Word word = new Word();
+                                        word.rowStart = 0;
+                                        word.rowEnd = row;
+                                        word.columnStart = 0;
+                                        word.columnEnd = column;
+                                        word.content += puzzle[row][column];
+                                        word.listLength = subListLength;
+                                        tempWordList.add(word);
+                                    } else {
+                                        Word word = tempWordList.get(column);
+                                        if (subListLength == word.listLength){ // 同样的子序列元素才添加
+                                            word.rowEnd = row;
+                                            word.columnEnd = column;
+                                            word.content += puzzle[row][column];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                longWordList.addAll(tempWordList);
+                tempWordList.clear();
+
+                // 3.1.2 对角线下方，控制条件 row' = column + y, column' = column，y = length - row
+                for (int row = 0; row < puzzle.length; row++) {
+                    for (int column = 0; column < puzzle[row].length; column++) {
+                        if (row > 0){ // 从对角线下方的元素数组中选取
+                            // 确定当前循环组成的字符串长度不小于最短单词的长度
+                            int subListLength = puzzle.length - row;
+                            if (subListLength >= minWordLength){
+                                // 确定当前循环的元素在目标序列中
+                                if (row == column + puzzle.length -  subListLength){
+                                    boolean hasSubWord = false;
+                                    if (tempWordList.size() == 0)
+                                        hasSubWord = false;
+                                    else {
+                                        for (Word word : tempWordList) {
+                                            if (word.listLength == subListLength){
+                                                hasSubWord = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (!hasSubWord){
+                                        Word word = new Word();
+                                        word.rowStart = 0;
+                                        word.rowEnd = row;
+                                        word.columnStart = 0;
+                                        word.columnEnd = column;
+                                        word.content += puzzle[row][column];
+                                        word.listLength = subListLength;
+                                        tempWordList.add(word);
+                                    } else {
+                                        Word word = tempWordList.get(column);
+                                        if (subListLength == word.listLength){ // 同样的子序列元素才添加
+                                            word.rowEnd = row;
+                                            word.columnEnd = column;
+                                            word.content += puzzle[row][column];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                longWordList.addAll(tempWordList);
+                tempWordList.clear();
 
             // 3.2 右下 --> 左上
 
