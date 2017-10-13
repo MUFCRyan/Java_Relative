@@ -7,7 +7,7 @@ import java.util.Arrays;
  * N 个数中选择第 k 个最大数
  */
 
-public class SelectMaxOfK {
+public class A01_SelectMaxOfK {
 
     public static void main(String[] args){
         int[] arr = new int[]{3,2,1,9,0,0,0,0,0,10,11,8};

@@ -5,11 +5,11 @@ package com.ryan.introduction;
  * 计算一个数的二进制数中 1 的个数
  */
 
-public class BinaryOneCount {
+public class A05_BinaryOneCount {
     private static final int NUMBER = 123;
     private static int count = 0;
     public static void main(String[] args){
-        BinaryOneCount binaryOneCount = new BinaryOneCount();
+        A05_BinaryOneCount binaryOneCount = new A05_BinaryOneCount();
         if (NUMBER % 2 == 1){
             binaryOneCount.calculateOneCount(NUMBER / 2);
             count ++;

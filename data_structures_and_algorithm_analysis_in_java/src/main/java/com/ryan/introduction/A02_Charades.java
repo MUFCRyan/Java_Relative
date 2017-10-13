@@ -8,7 +8,7 @@ import java.util.List;
  * 求解字谜
  */
 
-public class Charades {
+public class A02_Charades {
     // 思路
     // 1. 每个单词均可用一个四元组表示，四元组包含：所在行、列，方向、长度
     // 2. 总共四种方向：水平、垂直、左上<-->右下、左下<-->右上
@@ -40,7 +40,7 @@ public class Charades {
     List<Word> queryWordList = new ArrayList<>();
 
     public static void main(String[] args){
-        Charades charades = new Charades();
+        A02_Charades charades = new A02_Charades();
         List<Word> words = charades.findWords(charades.puzzle, charades.words);
         for (Word word : words) {
             System.out.println(word.content);

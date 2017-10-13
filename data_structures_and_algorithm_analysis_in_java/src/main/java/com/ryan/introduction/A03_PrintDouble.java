@@ -5,10 +5,10 @@ package com.ryan.introduction;
  * 打印任意 double 型变量，此处解决方案不完善，只是利用了 for 循环逐个字符打印
  */
 
-public class PrintDouble {
+public class A03_PrintDouble {
 
     public static void main(String[] args){
-        PrintDouble printDouble = new PrintDouble();
+        A03_PrintDouble printDouble = new A03_PrintDouble();
         printDouble.printOut(12345);
         System.out.println();
         printDouble.printDouble(-123456.123456);

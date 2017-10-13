@@ -11,15 +11,15 @@ import java.io.IOException;
  * 因为暂时不好找到 C 文件的原因，故此处只是找一次 Java 文件而已
  */
 
-public class IncludeFile {
+public class A04_IncludeFile {
     private static final String INCLUDE_SYMBOL = "import ";
     private static final String FILE_SUFFIX = ".java";
-    private static final String FIRST_FILE_PATH = "com/ryan/introduction/PrintDouble" + FILE_SUFFIX;
+    private static final String FIRST_FILE_PATH = "com/ryan/introduction/A03_PrintDouble" + FILE_SUFFIX;
 
     public static void main(String[] args){
         //File file = new File("MyFile.txt");
         //System.out.println(file.getPath());
-        IncludeFile includeFile = new IncludeFile();
+        A04_IncludeFile includeFile = new A04_IncludeFile();
         includeFile.readFilesByInclude(FIRST_FILE_PATH);
     }
 
