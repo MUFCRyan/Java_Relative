@@ -14,7 +14,7 @@ public class B08_RandomN {
     private static Random sRandom = new Random();
 
     public static void main(String[] args){
-        new RandomGenerator1().randomInt(1, 5);
+        new RandomGenerator1().run(1, 3);
     }
 
     static class RandomGenerator{
@@ -32,7 +32,7 @@ public class B08_RandomN {
     static class RandomGenerator1 extends RandomGenerator{
         @Override
         protected void randomInt(int i, int j) {
-            int[] array = new int[j - i + 1];
+            int[] array = new int[j];
             for (int index = 0; index < array.length; index++) {
                 int element = generateElement(array, index, j);
                 array[index] = element;
