@@ -14,86 +14,139 @@ public class B08_RandomN {
     private static Random sRandom = new Random();
 
     public static void main(String[] args){
-        new RandomGenerator1().run(1, 3);
+        //PrintUtil.println("Run Time: " + new RandomGenerator1().run(0, 8000));
+        //PrintUtil.println("Run Time: " + new RandomGenerator2().run(0, 400000));
+        PrintUtil.println("Run Time: " + new RandomGenerator3().run(0, RandomGenerator3.N));
     }
 
-    static class RandomGenerator{
-        public double run(int i, int j){
+    static abstract class RandomGenerator{
+        static int N = 0;
+        static Random sRandom = new Random();
+
+        static void setN(int n){
+            N = n;
+        }
+
+        double run(int i, int j){
             long start = System.currentTimeMillis();
-            randomInt(i, j);
+            for (int index = 0; index < 10; index++) {
+                //PrintUtil.println("Run Count - " + (index + 1) + ": " +Arrays.toString(generateArray(i, j)));
+                generateArray(i, j);
+            }
             return ((double) (System.currentTimeMillis() - start));
         }
 
-        protected void randomInt(int i, int j){
-
+        int randomInt(int i, int j){
+            return sRandom.nextInt(j - i + 1) + i;
         }
+
+        abstract int[] generateArray(int min, int max);
     }
 
     static class RandomGenerator1 extends RandomGenerator{
+        // 理论：O(N^2) + O(while)
+        // 实际：O(N^2)
+        // 实际时长（N-ms*10:avg）：
+        // 250 - 13:
+        // 500 - 21:
+        // 1000 - 42:
+        // 2000 - 109:
+        // 8000 - 1843:
         @Override
-        protected void randomInt(int i, int j) {
-            int[] array = new int[j];
+        int[] generateArray(int min, int max) {
+            int[] array = new int[max - min + 1];
             for (int index = 0; index < array.length; index++) {
-                int element = generateElement(array, index, j);
-                array[index] = element;
+                array[index] = generateUnRepeatNumber(array, index, min, max);
             }
-            StringBuilder builder = new StringBuilder();
-            for (int element : array) {
-                builder.append(element);
-            }
-            new FullArray().permute(builder.toString());
+            return array;
         }
 
-        private int generateElement(int[] array, int index, int j) {
-            int max = sRandom.nextInt(j) + 1;
-            if (array.length == 0)
-                return max;
-            boolean hasSameElement = false;
-            for (int beforeIndex = 0; beforeIndex < index; beforeIndex++) {
-                if (array[beforeIndex] == max){
-                    hasSameElement = true;
-                    break;
+        private int generateUnRepeatNumber(int[] array, int end, int min, int max) {
+            while (true){
+                int randomInt  = randomInt(min, max);
+                if (end == 0)
+                    return randomInt;
+                for (int i = 0; i < end; i++) {
+                    if (array[i] == randomInt){
+                        break;
+                    }
+                    if (i == end - 1 && array[i] != randomInt){
+                        return randomInt;
+                    }
                 }
             }
-            if (hasSameElement)
-                return generateElement(array, index, j);
-            else
-                return max;
         }
     }
 
-    static class FullArray {
-
-        private void permute(String string){
-            char[] chars = string.toCharArray();
-            permute(chars, 0, chars.length - 1);
+    static class RandomGenerator2 extends RandomGenerator{
+        // 算法2，使用一个 usedArray 保存用过的整数
+        // 理论：O(N) + O(while)
+        // 实际：O(N) + O(while)
+        // 实际时长（N-ms*10:avg）：
+        // 25000 - 51:
+        // 50000 - 118
+        // 100000 - 306
+        // 200000 - 489
+        // 400000 - 1212
+        // 800000 - 2208
+        @Override
+        int[] generateArray(int min, int max) {
+            int[] array = new int[max - min + 1];
+            boolean[] usedArray = new boolean[max - min + 1];
+            for (int index = 0; index < array.length; index++) {
+                array[index] = generateUnRepeatNumber(usedArray, min, max);
+            }
+            return array;
         }
 
-        private void permute(char[] chars, int low, int high){
-            if (low >= high){
-                // 找到最后一个字母后将当前排列的所有字母全部打印出来
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < chars.length; i++) {
-                    builder.append(chars[i]);
+        private int generateUnRepeatNumber(boolean[] usedArray, int min, int max) {
+            int transferLength = 0 - min; // 实际数字大小与其所在 UsedArray 上的位置的转换差值
+            while (true){
+                int randomInt = randomInt(min, max);
+                if (!usedArray[randomInt + transferLength]){
+                    usedArray[randomInt + transferLength] = true;
+                    return randomInt;
                 }
-                PrintUtil.print(builder.toString());
-                PrintUtil.println();
-                return;
-            }
-
-            // 遍历找出每种可能的排列组合，原理：每次固定一个字符，然后在剩余的列表中再次进行列表的循环，在每次循环中继续调用该函数进行递归，直到遍历到最后一个字母代表找到当前的排列；
-            // 然后到上一层继续执行未完成的循环和递归
-            for (int i = low; i <= high; i++) { // high 代表的是最后一个元素的下标而非数组的大小，必须遍历到
-                swamp(chars, i, high);
-                permute(chars, low + 1, high);
-                swamp(chars, i, high);
             }
         }
+    }
 
-        private void swamp(char[] chars, int i, int high) {
-            char temp = chars[i];
-            chars[i] = chars[high];
-            chars[high] = temp;
+    static class RandomGenerator3 extends RandomGenerator{
+        // 算法3，用 a[i] = i + 1 填充整个数组，然后循环一遍后随机替换
+        // 理论：O(N)
+        // 实际：O(N)
+        // 实际时长（N-ms*10:avg）：
+        // 100000 - 43
+        // 200000 - 91
+        // 400000 - 225
+        // 800000 - 480
+        // 1600000 - 1023
+        // 3200000 - 1959
+        // 6400000 - 4038
+
+        RandomGenerator3(){
+            setN(6400000);
+        }
+
+        @Override
+        int[] generateArray(int min, int max) {
+            int[] array = new int[max - min + 1];
+            int transferLength = 0 - min;
+            for (int index = 0; index < array.length; index++) {
+                array[index] = index + 1 + transferLength;
+            }
+
+            for (int i = 0; i < array.length; i++) {
+                swapReferences(array, i, randomInt(min, max) + transferLength);
+            }
+
+            return array;
+        }
+
+        private void swapReferences(int[] array, int index, int randomIndex) {
+            int temp = array[index];
+            array[index] = array[randomIndex];
+            array[randomIndex] = temp;
         }
     }
 }
