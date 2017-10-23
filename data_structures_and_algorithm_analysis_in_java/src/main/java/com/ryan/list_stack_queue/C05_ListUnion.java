@@ -11,7 +11,7 @@ import java.util.List;
 public class C05_ListUnion {
 
     private <T extends Comparable<? super T>> List<T> union(List<T> list1, List<T> list2, List<T> union){
-        if (list1 == null || list2 == null)
+        if (list1 == null && list2 == null)
             return union;
 
         Iterator<T> iterator1 = list1.iterator();
@@ -20,15 +20,18 @@ public class C05_ListUnion {
         T item1 = iterator1.next();
         T item2 = iterator2.next();
 
-        if (item1 != null || item2 != null){
-            if (item1 == null && item2 == null)
-                return union;
-
-            if (item1 == null)
+        while (item1 != null || item2 != null){
+            if (item1 == null){
                 union.add(item2);
+                item2 = iterator2.hasNext() ? iterator2.next() : null;
+                continue;
+            }
 
-            if (item2 == null)
+            if (item2 == null){
                 union.add(item1);
+                item1 = iterator1.hasNext() ? iterator1.next() : null;
+                continue;
+            }
 
             int compareResult = item1.compareTo(item2);
             if (compareResult == 0){
@@ -37,10 +40,8 @@ public class C05_ListUnion {
                 item2 = iterator2.hasNext() ? iterator2.next() : null;
             } else if (compareResult < 0){
                 union.add(item1);
-                union.add(item2);
                 item1 = iterator1.hasNext() ? iterator1.next() : null;
             } else {
-                union.add(item1);
                 union.add(item2);
                 item2 = iterator2.hasNext() ? iterator2.next() : null;
             }
