@@ -2,6 +2,9 @@ package com.ryan.list_stack_queue;
 
 import com.ryan.util.PrintUtil;
 
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 /**
  * Created by zhaofengchun on 2017/10/23.
  * 练习 3.6 约瑟夫问题，总数为 N，报数为 M
@@ -11,16 +14,64 @@ import com.ryan.util.PrintUtil;
 
 public class C06_Josephus {
     public static void main(String[] args){
-
+        //josephus(5, 2);
+        pass(5, 2);
     }
 
     private static void josephus(int n, int m){
-        for (int i = 0; i < n; i+= m) {
-            if (i >= n)
-                i = n % m;
-            PrintUtil.println(i);
-            n--;
-            i--;
+        int index = m;
+        while (n > 0){
+            if (index > n){
+                index = index % n;
+            }
+            PrintUtil.println(index);
+            index += m;
+            n --;
         }
+    }
+
+    private static void pass(int n, int m){
+        int i, j, mPrime, numLeft;
+        ArrayList<Integer> list = new ArrayList<>();
+        for (i = 1; i <= n; i++) {
+            list.add(i);
+        }
+
+        ListIterator<Integer> iterator = list.listIterator();
+        Integer item = 0;
+        numLeft = n;
+        list.trimToSize();
+
+        for (i = 0; i < n; i++) {
+            mPrime = m % numLeft;
+            if (mPrime <= numLeft / 2){
+                if (iterator.hasNext())
+                    item = iterator.next();
+                for (j = 0; j < mPrime; j++) {
+                    if (!iterator.hasNext())
+                        iterator = list.listIterator();
+                    item = iterator.next();
+                }
+            } else {
+                for (j = 0; j < numLeft - mPrime; j++) {
+                    if (!iterator.hasPrevious())
+                        iterator = list.listIterator(list.size());
+                    item = iterator.previous();
+                }
+            }
+
+            PrintUtil.print("Removed " + item + " ");
+            iterator.remove();
+            if (!iterator.hasNext()){
+                iterator = list.listIterator();
+            }
+            PrintUtil.println();
+            for (Integer x : list) {
+                PrintUtil.print(x + " ");
+            }
+            PrintUtil.println();
+            numLeft --;
+        }
+        PrintUtil.println();
     }
 }
