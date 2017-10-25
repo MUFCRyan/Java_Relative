@@ -57,6 +57,7 @@ public class C23_InfixToPostfixExpress {
     private static final String SYMBOL_RIGHT_BRACKET = ")";
     private static final String SYMBOL_POWER = "^";
 
+    // TODO: 2017/10/25 先不做暂无法解决
     private static String infixTpPostfix(String express){
         Stack<Express> expressStack = new Stack<>();
         StringBuilder result = new StringBuilder();
