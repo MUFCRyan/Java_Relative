@@ -3,13 +3,15 @@ package com.ryan.list_stack_queue;
 import com.ryan.util.PrintUtil;
 
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by MUFCRyan on 2017/10/24.
  * 练习 3.22 编写一个程序计算后缀表达式的值
  */
 
-public class C22_PostFixExpress {
+public class C22_PostfixExpression {
 
     private static Express sAddExpress;
     private static Express sSubExpress;
@@ -18,11 +20,11 @@ public class C22_PostFixExpress {
     private static Express sLeftBracketExpress;
     private static Express sRightBracketExpress;
 
-    private static final String POSTFIX_EXPRESS = "6523+8*+3+*";
+    private static final String POSTFIX_EXPRESS = "6 5 2 3 + 8 * + 3 + *";
 
     public static void main(String[] args){
         initExpress();
-        PrintUtil.println(evaluatePostFix(POSTFIX_EXPRESS));
+        PrintUtil.println(evaluatePostfix(POSTFIX_EXPRESS));
     }
 
     private static void initExpress() {
@@ -34,23 +36,23 @@ public class C22_PostFixExpress {
         sRightBracketExpress = new Express(SYMBOL_RIGHT_BRACKET, 3);
     }
 
-    private static final char SYMBOL_ADD = '+';
-    private static final char SYMBOL_SUB = '-';
-    private static final char SYMBOL_MULTIPLE = '*';
-    private static final char SYMBOL_DIVIDE = '/';
-    private static final char SYMBOL_LEFT_BRACKET = '(';
-    private static final char SYMBOL_RIGHT_BRACKET = ')';
+    private static final String SYMBOL_ADD = "+";
+    private static final String SYMBOL_SUB = "-";
+    private static final String SYMBOL_MULTIPLE = "*";
+    private static final String SYMBOL_DIVIDE = "/";
+    private static final String SYMBOL_LEFT_BRACKET = "(";
+    private static final String SYMBOL_RIGHT_BRACKET = ")";
 
-    private static int evaluatePostFix(String express){
+    private static int evaluatePostfix(String express){
         int value = 0;
         Stack<Integer> numStack = new Stack<>();
-        char[] chars = express.toCharArray();
+        String[] chars = express.trim().split(" ");
         for (int i = 0; i < chars.length; i++) {
-            char element = chars[i];
+            String element = chars[i];
             if (isNum(element)){
-                int number = Integer.parseInt(String.valueOf(element));
+                int number = Integer.parseInt(element);
                 numStack.push(number);
-            } else if (numStack.size() > 0){
+            } else if (!numStack.isEmpty()){
                 Express realExpress = getExpress(element);
                 Integer second = numStack.pop();
                 Integer first = numStack.pop();
@@ -62,7 +64,7 @@ public class C22_PostFixExpress {
         return value;
     }
 
-    private static Express getExpress(char express){
+    private static Express getExpress(String express){
         Express realExpress = null;
         switch(express){
             case SYMBOL_ADD:
@@ -110,15 +112,17 @@ public class C22_PostFixExpress {
         return result;
     }
 
-    private static boolean isNum(char num){
-        return '0' <= num && num <= '9';
+    private static boolean isNum(String num){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher matcher = pattern.matcher(num);
+        return matcher.matches();
     }
 
     private static class Express implements Comparable<Express>{
         private int priority = 0;
-        private char express;
+        private String express;
 
-        Express(char express, int priority){
+        Express(String express, int priority){
             this.express = express;
             this.priority = priority;
         }
@@ -135,27 +139,27 @@ public class C22_PostFixExpress {
         }
 
         private boolean isAdd(){
-            return SYMBOL_ADD == express;
+            return SYMBOL_ADD.equals(express);
         }
 
         private boolean isSub(){
-            return SYMBOL_SUB == express;
+            return SYMBOL_SUB.equals(express);
         }
 
         private boolean isMultiple(){
-            return SYMBOL_MULTIPLE == express;
+            return SYMBOL_MULTIPLE.equals(express);
         }
 
         private boolean isDivide(){
-            return SYMBOL_DIVIDE == express;
+            return SYMBOL_DIVIDE.equals(express);
         }
 
         private boolean isLeftBracket(){
-            return SYMBOL_LEFT_BRACKET == express;
+            return SYMBOL_LEFT_BRACKET.equals(express);
         }
 
         private boolean isRightBracket(){
-            return SYMBOL_RIGHT_BRACKET == express;
+            return SYMBOL_RIGHT_BRACKET.equals(express);
         }
     }
 }
