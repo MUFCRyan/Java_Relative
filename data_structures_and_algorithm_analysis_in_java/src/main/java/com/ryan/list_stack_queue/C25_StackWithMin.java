@@ -9,7 +9,7 @@ import java.util.Stack;
  * b. 证明，如果我们添加找出并删除最小元素的第4种操作 deleteMin，那么至少有一种操作必然花费 Ω(logN) 时间（需阅读第七章）
  */
 
-public class C25_StackWIthMin<T extends Comparable<T>>{
+public class C25_StackWithMin<T extends Comparable<T>>{
     private Stack<T> operation = new Stack();
     private Stack<T> minElement = new Stack();
 
