@@ -24,7 +24,7 @@ public class D11_CustomTreeSet<AnyType extends Comparable<? super AnyType>> {
         root = null;
     }
 
-    public boolean isEmpty(){
+    private boolean isEmpty(){
         return root == null;
     }
 
@@ -46,12 +46,12 @@ public class D11_CustomTreeSet<AnyType extends Comparable<? super AnyType>> {
         }
     }
 
-    public AnyType findMin() throws UnderflowException{
+    /*public AnyType findMin() throws UnderflowException{
         if (isEmpty())
             throw new UnderflowException();
         else
             return findMin(root).element;
-    }
+    }*/
 
     private BinaryNode<AnyType> findMin(BinaryNode<AnyType> tree) {
         if (tree == null)
@@ -61,12 +61,12 @@ public class D11_CustomTreeSet<AnyType extends Comparable<? super AnyType>> {
         return findMin(tree.left);
     }
 
-    public AnyType findMax() throws UnderflowException{
+    /*public AnyType findMax() throws UnderflowException{
         if (isEmpty())
             throw new UnderflowException();
         else
             return findMax(root).element;
-    }
+    }*/
 
     private BinaryNode<AnyType> findMax(BinaryNode<AnyType> tree) {
         if (tree == null)
@@ -95,7 +95,7 @@ public class D11_CustomTreeSet<AnyType extends Comparable<? super AnyType>> {
         return tree;
     }
 
-    public void remove(AnyType x){
+    private void remove(AnyType x){
         root = remove(x, root);
     }
 
@@ -136,9 +136,9 @@ public class D11_CustomTreeSet<AnyType extends Comparable<? super AnyType>> {
         }
     }
 
-    class UnderflowException extends Exception{
+    /*private class UnderflowException extends Exception{
 
-    }
+    }*/
 
     private static class BinaryNode<AnyType>{
 

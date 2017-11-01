@@ -5,7 +5,7 @@ package com.ryan.tree;
  * 练习 4.21 写出实现 AVL 单旋转和双旋转的其余的过程
  */
 
-public class D21_RemainedTreeRotatetions<AnyType>{
+public class D21_RemainedTreeRotations<AnyType>{
     private static class AvlNode<AnyType> {
 
         AnyType mElement;
