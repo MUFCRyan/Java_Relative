@@ -11,13 +11,13 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
         Node<Integer> root = new Node<>(null, null, null, 1);
         for (int i = 2; i <= 15; i++) {
             Integer element = i;
-            insertAVLNoRecursion.insert(element, root);
+            root = insertAVLNoRecursion.insert(element, root);
         }
 
         Node<Integer> tree = root;
     }
 
-    private Node<AnyType> insert(AnyType element, Node<AnyType> root){
+    public Node<AnyType> insert(AnyType element, Node<AnyType> root){
         if (root == null){
             root = new Node<>(null, null, null, element);
             return root;
@@ -40,9 +40,9 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
                             // 调整子树的平衡
                             int result = element.compareTo(currentTree.left.element);
                             if (result < 0){
-                                rotateWithLeftChild(currentTree);
+                                currentTree = rotateWithLeftChild(currentTree);
                             } else {
-                                doubleWithLeftChild(currentTree);
+                                currentTree = doubleWithLeftChild(currentTree);
                             }
                         }
                         if (currentTree.previous == null){
@@ -50,7 +50,7 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
                         }
                         currentTree = currentTree.previous;
                     }
-                    return tree.left;
+                    return root;
                 }
             } else if (compareResult > 0){
                 if (tree.right != null){
@@ -66,9 +66,9 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
                             // 调整子树的平衡
                             int result = element.compareTo(currentTree.right.element);
                             if (result > 0){
-                                rotateWithRightChild(currentTree);
+                                currentTree = rotateWithRightChild(currentTree);
                             } else {
-                                doubleWithRightChild(currentTree);
+                                currentTree = doubleWithRightChild(currentTree);
                             }
                         }
                         if (currentTree.previous == null){
@@ -76,14 +76,14 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
                         }
                         currentTree = currentTree.previous;
                     }
-                    return tree.right;
+                    return root;
                 }
             } else // Duplicate
-                return tree;
+                return root;
         }
     }
 
-    private int getHeight(Node<AnyType> node){
+    public int getHeight(Node<AnyType> node){
         if (node == null)
             return 0;
         return node.height;
@@ -94,6 +94,17 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
         Node k1 = k2.left;
         k2.left = k1.right;
         k1.right = k2;
+        // 调整平衡后子树对于父节点的引用
+        k1.previous = k2.previous;
+        k2.previous = k1;
+        // 调整平衡后子树父节点对于该子树的引用
+        if (k1.previous != null){
+            int compareResult = k1.element.compareTo(k1.previous.element);
+            if (compareResult > 0)
+                k1.previous.right = k1;
+            else
+                k1.previous.left = k1;
+        }
         // 高度计算时必须先计算子树的高度才能计算其父节点的高度，否则会因为子树高度未计算完毕导致父节点高度计算有误
         k2.height = Math.max(getHeight(k2.left), getHeight(k2.right)) + 1;
         k1.height = Math.max(getHeight(k1.left), k2.height) + 1;
@@ -105,6 +116,15 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
         Node k1 = k2.right;
         k2.right = k1.left;
         k1.left = k2;
+        k1.previous = k2.previous;
+        k2.previous = k1;
+        if (k1.previous != null){
+            int compareResult = k1.element.compareTo(k1.previous.element);
+            if (compareResult > 0)
+                k1.previous.right = k1;
+            else
+                k1.previous.left = k1;
+        }
         // 高度计算时必须先计算子树的高度才能计算其父节点的高度，否则会因为子树高度未计算完毕导致父节点高度计算有误
         k2.height = Math.max(getHeight(k2.left), getHeight(k2.right)) + 1;
         k1.height = Math.max(k2.height, getHeight(k1.right)) + 1;
@@ -123,24 +143,5 @@ public class D23_InsertAVLNoRecursion<AnyType extends Comparable<? super AnyType
         // 先将右子树与其下的右子树进行左单旋，然后再将旋转后的子树与 k3 进行右单旋
         k3.right = rotateWithLeftChild(k3.right);
         return rotateWithRightChild(k3);
-    }
-
-    private static class Node<AnyType>{
-        private Node<AnyType> previous;
-        private Node<AnyType> left;
-        private Node<AnyType> right;
-        private AnyType element;
-        private int height = 0;
-
-        Node(Node<AnyType> previous, Node<AnyType> left, Node<AnyType> right, AnyType element) {
-            this.previous = previous;
-            this.left = left;
-            this.right = right;
-            this.element = element;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
-        }
     }
 }
