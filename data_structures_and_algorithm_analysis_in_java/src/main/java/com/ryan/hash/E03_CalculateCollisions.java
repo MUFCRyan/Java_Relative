@@ -11,7 +11,7 @@ public class E03_CalculateCollisions {
     private int doubleHashCollisions = 0;
     private ElementType[] mArray = new ElementType[1000];
 
-    private int linearProbing(ElementType element) {
+    private int linearProbing(ElementType<Integer> element) {
         int position = hash(element.element, mArray.length);
         while (mArray[position] != null && mArray[position].isActivated) {
             linearProbingCollisions++;
@@ -40,7 +40,7 @@ public class E03_CalculateCollisions {
         return squareProbing(element, position);
     }
 
-    private int doubleHashing(ElementType element){
+    private int doubleHashing(ElementType<Integer> element){
         int position = hash(element.element, mArray.length);
         int hash2 = hash2(element.element);
         while (mArray[position] != null && mArray[position].isActivated){

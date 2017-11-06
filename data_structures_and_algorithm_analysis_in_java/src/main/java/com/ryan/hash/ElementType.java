@@ -5,7 +5,7 @@ package com.ryan.hash;
  * 散列表元素类型
  */
 
-public class ElementType {
-    public int element = 0;
+public class ElementType<AnyType> {
+    public AnyType element;
     public boolean isActivated = false;
 }
